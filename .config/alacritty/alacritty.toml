@@ -1,0 +1,21 @@
+# My alacritty configuration
+
+shell = "/usr/bin/bash"
+working_directory = "/home/diego"
+
+[window]
+padding = { x = 5, y = 5 }
+opacity = 1.0
+
+[font]
+size = 10.0
+
+[colors]
+[colors.primary]
+foreground = "#F0FDFF"
+background = "#002D4A"
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 500
+blink_timeout = 0
