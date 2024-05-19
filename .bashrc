@@ -8,7 +8,9 @@ alias ll="eza -lagHMm --header --git"
 alias clip="xclip -selection clipboard"
 alias ff="fastfetch"
 alias sl="sl -10 -cdwa"
-alias simonsays="sudo"
+alias simonsays="/usr/bin/sudo "
+alias sudo="/usr/bin/sudo "
+# alias e="emacsclient -cun"
 alias q="exit"
 alias c="clear"
 # alias cat="bat --paging=never"
@@ -27,12 +29,21 @@ cu() {
     fi
 }
 
+e() {
+    echo $# $@
+    if [[ $# -gt 0 ]]; then
+	emacsclient -cun $@
+    else
+	emacsclient -cun .
+    fi
+}
+
 # Open man page in emacsclient frame
 eman() {
     if [[ $# -eq 1 ]]; then # Single arg
-	emacsclient -e "(man \"$1\")";
+	emacsclient -u -e "(man \"$1\")";
     elif [[ $# -eq 2 ]]; then # double arg
-	emacsclient -e "(man \"$2\($1)\")";
+	emacsclient -u -e "(man \"$2\($1)\")";
     fi
 }
 
@@ -41,7 +52,7 @@ eman() {
 # Else (executable) is uses `file` and `whatis`
 which() {
     if [[ $# -ne 1 ]]; then
-	return -1;
+	return 1;
     fi
 
     # Fun little edge-case
@@ -56,9 +67,13 @@ which() {
 	type=$(type $1 2>/dev/null);
 	if [[ $? -ne 0 ]]; then
 	    echo "bash: $1 not found";
-	    return -1;
+	    return 1;
 	else
 	    echo "$type";
+	    whatis=$(whatis $1 | grep -e '(n)');
+	    if [[ $? -eq 0 ]]; then
+		echo "$whatis";
+	    fi
 	fi
     else
 	# If $1 is an executable, use `file` to get info about it
@@ -71,13 +86,25 @@ which() {
     fi
 }
 
-PS1='$(prompt.py "$?" $(tput cols))'
+PS1='$(prompt.py "$?" $(tput cols))';
 
 # Created by `pipx` on 2024-02-26 01:33:26
-export PATH="$PATH:/home/diego/.local/bin"
+export PATH="$PATH:/home/diego/.local/bin";
 
 # Added by me
-export PATH="$PATH:/home/diego/.config/scripts"
+export PATH="$PATH:/home/diego/.config/scripts";
 
-eval "$(fzf --bash)"
-eval "$(zoxide init --cmd cd bash)"
+eval "$(fzf --bash)";
+eval "$(zoxide init --cmd cd bash)";
+
+cds() {
+    __zoxide_z "$@" && ls;
+}
+
+cda() {
+    __zoxide_z "$@" && la;
+}
+
+cdl() {
+    __zoxide_z "$@" && ll;
+}
