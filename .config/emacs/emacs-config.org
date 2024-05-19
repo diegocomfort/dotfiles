@@ -250,6 +250,12 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
   (setq org-return-follows-link t)
 #+end_src
 
+** Grep
+#+begin_src emacs-lisp
+  (require 'grep)
+  (grep-apply-setting 'grep-command "grep --color=always --null -irn -- ")
+#+end_src
+
 * Elisp
 ** Functions
 *** Finding/Opening the init file
@@ -316,8 +322,6 @@ I use it to open curly braces
   (define-key compilation-mode-map (kbd "C-c c") 'compile)
   (define-key prog-mode-map (kbd "C-c r") 'recompile)
   (define-key compilation-mode-map (kbd "C-c r") 'recompile)
-  (define-key prog-mode-map (kbd "C-;") 'comment-line)
-  (define-key conf-mode-map (kbd "C-;") 'comment-line)
   (global-set-key (kbd "C-c C-e") 'eval-and-replace)
   (global-set-key (kbd "C-j") 'newline)
   (global-set-key (kbd "M-j") 'open-line-and-indent)
@@ -325,6 +329,11 @@ I use it to open curly braces
   (global-set-key (kbd "C-M-p") 'backward-up-list)
   (global-set-key (kbd "C-M-n") 'up-list)
   (global-set-key (kbd "M-SPC") 'set-mark-command)
+  (define-key prog-mode-map (kbd "C-;") 'comment-line)
+  (require 'conf-mode)
+  (define-key conf-mode-map (kbd "C-;") 'comment-line)
+
+  (global-unset-key (kbd "C-x C-n"))	; set-goal-colum
 #+end_src 
 
 ** Misc Elisp Configurationsp
