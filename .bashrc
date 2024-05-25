@@ -1,3 +1,7 @@
+# stdout=0
+# stdin=1
+# stderr=2
+
 alias ls="eza --color=always"
 alias la="eza -a"
 alias lt="eza -lgHMm --header --total-size --git"
@@ -30,7 +34,6 @@ cu() {
 }
 
 e() {
-    echo $# $@
     if [[ $# -gt 0 ]]; then
 	emacsclient -cun $@
     else
@@ -50,6 +53,11 @@ eman() {
 # Better which
 # If it is a shell built-in or function, it uses `type`
 # Else (executable) is uses `file` and `whatis`
+# TODO: could be both built-in and script
+# $ type -a pwd
+# pwd is a shell builtin
+# pwd is /usr/bin/pwd
+# pwd is /bin/pwd
 which() {
     if [[ $# -ne 1 ]]; then
 	return 1;
@@ -70,7 +78,7 @@ which() {
 	    return 1;
 	else
 	    echo "$type";
-	    whatis=$(whatis $1 | grep -e '(n)');
+	    whatis=$(whatis $1 2>/dev/null | grep -e '\(n\)');
 	    if [[ $? -eq 0 ]]; then
 		echo "$whatis";
 	    fi
@@ -79,11 +87,86 @@ which() {
 	# If $1 is an executable, use `file` to get info about it
 	file $(realpath $path);
 	# If a manpage for it exists, print its description
-	whatis=$(whatis $1 | grep -e '(1)' -e '(6)' -e '(8)')
+	whatis=$(whatis $1 2>/dev/null | grep -e '\(1\)' -e '\(6\)' -e '\(8\)')
 	if [[ $? -eq 0 ]]; then
 	    echo "$whatis";
 	fi
     fi
+}
+
+up() {
+    echo $?
+    if [[ $? -eq 0 ]]; then
+	builtin cd ..;
+	echo Entering "$PWD";
+	return;
+    fi
+
+    N=$(seq $1 2>/dev/null);
+    if [[ $? -ne 0 ]]; then
+	echo "\"$1\" is not a valid number";
+	return 1;
+    fi
+    for i in $N; do
+	builtin cd ..;
+    done
+    echo Entering "$PWD";
+}
+
+ups() {
+    up $1;
+    if [[ $? -eq 0 ]]; then
+	ls;
+    fi
+}
+
+upa() {
+    up $1;
+    if [[ $? -eq 0 ]]; then
+	la;
+    fi
+}
+
+upl() {
+    up $1;
+    if [[ $? -eq 0 ]]; then
+	ll;
+    fi
+}
+
+cd() {
+    __zoxide_z "$@";
+    if [[ $? -eq 0 ]]; then
+	echo Entering "$PWD";
+    fi
+}
+
+cds() {
+    __zoxide_z "$@";
+    if [[ $? -eq 0 ]]; then
+	echo Entering "$PWD";
+	ls;
+    fi
+}
+
+cda() {
+    __zoxide_z "$@";
+    if [[ $? -eq 0 ]]; then
+	echo Entering "$PWD";
+	la;
+    fi
+}
+
+cdl() {
+    __zoxide_z "$@";
+    if [[ $? -eq 0 ]]; then
+	echo Entering "$PWD";
+	ll;
+    fi
+}
+
+reload() {
+    source ~/.bashrc;
 }
 
 PS1='$(prompt.py "$?" $(tput cols))';
@@ -94,17 +177,5 @@ export PATH="$PATH:/home/diego/.local/bin";
 # Added by me
 export PATH="$PATH:/home/diego/.config/scripts";
 
-eval "$(fzf --bash)";
-eval "$(zoxide init --cmd cd bash)";
-
-cds() {
-    __zoxide_z "$@" && ls;
-}
-
-cda() {
-    __zoxide_z "$@" && la;
-}
-
-cdl() {
-    __zoxide_z "$@" && ll;
-}
+FZF_CTRL_T_COMMAND= FZF_ALT_C_COMMAND= eval "$(fzf --bash)";
+eval "$(zoxide init bash)";
