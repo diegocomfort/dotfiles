@@ -15,7 +15,13 @@ Tsoding uses, but with the Endeavour image color scheme
 ** Line Numbering
 #+begin_src emacs-lisp
   (setq display-line-numbers-type 'visual)
-  (global-display-line-numbers-mode 1)
+  (global-display-line-numbers-mode -1)
+  (require 'conf-mode)
+  (dolist (mode '(org-mode-hook
+		  prog-mode-hook
+		  conf-mode-hook
+		  text-modet-hook))
+    (add-hook mode display-line-numbers-mode))
 #+end_src 
 
 ** Auto-Save + Backups
@@ -256,6 +262,12 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
   (grep-apply-setting 'grep-command "grep --color=always --null -irn -- ")
 #+end_src
 
+** Shell
+#+begin_src emacs-lisp
+(lambda () (setq fill-column 80))
+(add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode -1)))
+#+end_src
+
 * Elisp
 ** Functions
 *** Finding/Opening the init file
@@ -330,7 +342,6 @@ I use it to open curly braces
   (global-set-key (kbd "C-M-n") 'up-list)
   (global-set-key (kbd "M-SPC") 'set-mark-command)
   (define-key prog-mode-map (kbd "C-;") 'comment-line)
-  (require 'conf-mode)
   (define-key conf-mode-map (kbd "C-;") 'comment-line)
 
   (global-unset-key (kbd "C-x C-n"))	; set-goal-colum

@@ -95,7 +95,6 @@ which() {
 }
 
 up() {
-    echo $?
     if [[ $? -eq 0 ]]; then
 	builtin cd ..;
 	echo Entering "$PWD";
