@@ -21,7 +21,7 @@ Tsoding uses, but with the Endeavour image color scheme
 		  prog-mode-hook
 		  conf-mode-hook
 		  text-modet-hook))
-    (add-hook mode display-line-numbers-mode))
+    (add-hook mode 'display-line-numbers-mode))
 #+end_src 
 
 ** Auto-Save + Backups
@@ -349,7 +349,7 @@ I use it to open curly braces
 
 ** Misc Elisp Configurationsp
 #+begin_src emacs-lisp
-  (setq debug-on-error nil) ; (STOPS) Opens debug buffer (with stack trace) on elisp errors
+  ;; (setq debug-on-error nil) ; (STOPS) Opens debug buffer (with stack trace) on elisp errors
 #+end_src 
 
 ** After-init hooks
