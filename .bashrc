@@ -2,19 +2,18 @@
 # stdin=1
 # stderr=2
 
-alias ls="eza --color=always"
-alias la="eza -a"
-alias lt="eza -lgHMm --header --total-size --git"
-alias llt="eza -lagHMm --header --total-size --git"
-alias l="eza -lgHMm --header --git"
-alias ll="eza -lagHMm --header --git"
+alias ls="eza --color=always --classify=always"
+alias la="ls -a"
+alias lt="ls -lgHMm --header --total-size --git"
+alias llt="ls -lagHMm --header --total-size --git"
+alias l="ls -lgHMm --header --git"
+alias ll="ls -lagHMm --header --git"
 
-alias clip="xclip -selection clipboard"
+alias copy="xclip -selection clipboard"
 alias ff="fastfetch"
 alias sl="sl -10 -cdwa"
 alias simonsays="/usr/bin/sudo "
 alias sudo="/usr/bin/sudo "
-# alias e="emacsclient -cun"
 alias q="exit"
 alias c="clear"
 # alias cat="bat --paging=never"
@@ -51,47 +50,40 @@ eman() {
 }
 
 # Better which
-# If it is a shell built-in or function, it uses `type`
-# Else (executable) is uses `file` and `whatis`
-# TODO: could be both built-in and script
-# $ type -a pwd
-# pwd is a shell builtin
-# pwd is /usr/bin/pwd
-# pwd is /bin/pwd
 which() {
     if [[ $# -ne 1 ]]; then
 	return 1;
     fi
 
-    # Fun little edge-case
-    if [[ $1 = "which" ]]; then
-	type which;
-	return 0;
-    fi
-
-    # Use `which` first, then type to find out what $1 is
-    path=$(/usr/bin/which $1 2>/dev/null)
-    if [[ $? -ne 0 ]]; then
-	type=$(type $1 2>/dev/null);
-	if [[ $? -ne 0 ]]; then
-	    echo "bash: $1 not found";
-	    return 1;
-	else
-	    echo "$type";
-	    whatis=$(whatis $1 2>/dev/null | grep -e '\(n\)');
+    case "$(type -t $1)" in
+	"alias")
+	    type $1
+	    ;;
+	"keyword")
+	    echo "$1 is a keyword"
+	    help $1
+	    ;;
+	"builtin")
+	    echo "$1 is a builtin"
+	    help $1
+	    ;;
+	"function")
+	    type $1
+	    ;;
+	"file")
+	    path=$(/usr/bin/which $1 2>/dev/null)
+	    file $(realpath $path);
+	    whatis=$(whatis $1 2>/dev/null | \
+			 grep -e '\(1\)' -e '\(6\)' -e '\(8\)')
 	    if [[ $? -eq 0 ]]; then
 		echo "$whatis";
 	    fi
-	fi
-    else
-	# If $1 is an executable, use `file` to get info about it
-	file $(realpath $path);
-	# If a manpage for it exists, print its description
-	whatis=$(whatis $1 2>/dev/null | grep -e '\(1\)' -e '\(6\)' -e '\(8\)')
-	if [[ $? -eq 0 ]]; then
-	    echo "$whatis";
-	fi
-    fi
+	    ;;
+	*)
+	    echo "bash: $1 not found";
+	    return 1;
+	    ;;
+    esac
 }
 
 up() {
