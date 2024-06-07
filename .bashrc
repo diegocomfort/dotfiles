@@ -8,6 +8,9 @@ alias lt="ls -lgHMm --header --total-size --git"
 alias llt="ls -lagHMm --header --total-size --git"
 alias l="ls -lgHMm --header --git"
 alias ll="ls -lagHMm --header --git"
+alias t="ls -T"
+alias ta="la -T"
+alias tl="ll -T"
 
 alias copy="xclip -selection clipboard"
 alias ff="fastfetch"
@@ -87,7 +90,7 @@ which() {
 }
 
 up() {
-    if [[ $? -eq 0 ]]; then
+    if [[ $# -eq 0 ]]; then
 	builtin cd ..;
 	echo Entering "$PWD";
 	return;
@@ -125,6 +128,13 @@ upl() {
     fi
 }
 
+upt() {
+    up $1;
+    if [[ $? -eq 0 ]]; then
+	t;
+    fi
+}
+
 cd() {
     __zoxide_z "$@";
     if [[ $? -eq 0 ]]; then
@@ -156,11 +166,20 @@ cdl() {
     fi
 }
 
+cdt() {
+    __zoxide_z "$@";
+    if [[ $? -eq 0 ]]; then
+	echo Entering "$PWD";
+	t;
+    fi
+}
+
 reload() {
     source ~/.bashrc;
 }
 
-PS1='$(prompt.py "$?" $(tput cols))';
+# Seems to be breaking bash
+PS1='\[$(prompt.py "$?" $(tput cols))\]';
 
 # Created by `pipx` on 2024-02-26 01:33:26
 export PATH="$PATH:/home/diego/.local/bin";

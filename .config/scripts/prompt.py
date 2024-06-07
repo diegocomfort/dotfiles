@@ -34,7 +34,7 @@ N = len(colors)
 steps = width // (N-1)
 
 # Create gradient
-final_colors = []
+gradient = []
 for i in range(N - 1):
     current_color = colors[i]
     next_color    = colors[i + 1]
@@ -44,10 +44,10 @@ for i in range(N - 1):
         g = current_color.g + step * (next_color.g - current_color.g) / steps
         b = current_color.b + step * (next_color.b - current_color.b) / steps
         color = Color(r, g, b)
-        final_colors.append(color);
+        gradient.append(color);
 
-while len(final_colors) < width:
-    final_colors.append(Color(0,45,74))
+while len(gradient) < width:
+    gradient.append(Color(0,45,74))
 
 # Create prompt
 name = getuser()
@@ -69,7 +69,7 @@ def color_string_fg(color, string):
 
 prompt = ""
 for i in range(width):
-    prompt += color_string_bg(final_colors[i], message[i])
+    prompt += color_string_bg(gradient[i], message[i])
 
 print(prompt)
 
