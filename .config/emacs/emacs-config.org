@@ -20,7 +20,8 @@ Tsoding uses, but with the Endeavour image color scheme
   (dolist (mode '(org-mode-hook
 		  prog-mode-hook
 		  conf-mode-hook
-		  text-modet-hook))
+		  text-mode-hook
+		  dired-mode-hook))
     (add-hook mode 'display-line-numbers-mode))
 #+end_src 
 
@@ -260,12 +261,13 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 #+begin_src emacs-lisp
   (require 'grep)
   (grep-apply-setting 'grep-command "grep --color=always --null -irn -- ")
+  (grep-apply-setting 'grep-use-null-device nil)
 #+end_src
 
 ** Shell
 #+begin_src emacs-lisp
-(lambda () (setq fill-column 80))
-(add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode -1)))
+  ;; (lambda () (setq fill-column 80))
+  (add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+end_src
 
 * Elisp

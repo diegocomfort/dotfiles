@@ -36,6 +36,7 @@
 	undo-redo
 	up-list
 	upcase-region
+	wdired--self-insert
 	))
 
 (setq mc/cmds-to-run-once
