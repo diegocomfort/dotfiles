@@ -22,7 +22,7 @@ Tsoding uses, but with the Endeavour image color scheme
 		  conf-mode-hook
 		  text-mode-hook
 		  dired-mode-hook))
-    (add-hook mode 'display-line-numbers-mode))
+    (add-hook mode '(lambda () (display-line-numbers-mode 1))))
 #+end_src 
 
 ** Auto-Save + Backups
@@ -255,6 +255,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 #+begin_src emacs-lisp
   (require 'org)
   (setq org-return-follows-link t)
+  (setq-default org-todo-keywords '((sequence "TODO" "IN PROGRESS" "DONE"))
 #+end_src
 
 ** Grep

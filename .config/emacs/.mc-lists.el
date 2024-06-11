@@ -43,5 +43,6 @@
       '(
 	counsel-M-x
 	handle-switch-frame
+	helpful-key
 	swiper-isearch
 	))
