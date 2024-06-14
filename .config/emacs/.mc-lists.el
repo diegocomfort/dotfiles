@@ -19,6 +19,7 @@
 	c-end-of-statement
 	c-indent-line-or-region
 	counsel-yank-pop
+	dired-undo
 	downcase-region
 	electric-newline-and-maybe-indent
 	end-of-buffer
@@ -32,6 +33,8 @@
 	open-line-and-indent
 	open-line-newline
 	org-delete-char
+	org-force-self-insert
+	org-kill-line
 	org-self-insert-command
 	undo-redo
 	up-list
@@ -45,4 +48,5 @@
 	handle-switch-frame
 	helpful-key
 	swiper-isearch
+	wdired-finish-edit
 	))

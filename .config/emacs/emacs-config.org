@@ -251,11 +251,19 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 				      ))
 #+end_src
 
-** Org
+** Org-mode
 #+begin_src emacs-lisp
   (require 'org)
   (setq org-return-follows-link t)
-  (setq-default org-todo-keywords '((sequence "TODO" "IN PROGRESS" "DONE"))
+  (setq org-todo-keywords '((sequence "TODO" "IN PROGRESS" "DONE")))
+  (setq org-format-latex-options '(:foreground default
+				   :background default
+				   :scale 1.1
+				   :html-foreground "Black"
+				   :html-background "Transparent"
+				   :html-scale 1.0
+				   :matchers
+				   ("begin" "$1" "$" "$$" "\\(" "\\[")))
 #+end_src
 
 ** Grep
@@ -348,9 +356,10 @@ I use it to open curly braces
   (define-key conf-mode-map (kbd "C-;") 'comment-line)
 
   (global-unset-key (kbd "C-x C-n"))	; set-goal-colum
+  (global-unset-key (kbd "C-r"))	; isearch-backward
 #+end_src 
 
-** Misc Elisp Configurationsp
+** Misc Elisp Configurations
 #+begin_src emacs-lisp
   ;; (setq debug-on-error nil) ; (STOPS) Opens debug buffer (with stack trace) on elisp errors
 #+end_src 
