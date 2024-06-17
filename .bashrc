@@ -180,6 +180,12 @@ reload() {
     source ~/.bashrc;
 }
 
+exit_code() {
+    code=$?;
+    echo $code;
+    return $code;
+}
+
 # Seems to be breaking bash
 PS1='\[$(prompt.py "$?" $(tput cols))\]';
 
