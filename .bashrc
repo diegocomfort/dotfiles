@@ -57,7 +57,12 @@ eman() {
 # Better which
 which() {
     if [[ $# -ne 1 ]]; then
-	return 1;
+	for arg in "$@"; do
+	    echo "${arg}:";
+	    which $arg;
+	    echo;
+	done
+	return;
     fi
 
     case "$(type -t $1)" in
@@ -76,12 +81,24 @@ which() {
 	    type $1
 	    ;;
 	"file")
-	    path=$(/usr/bin/which $1 2>/dev/null)
-	    file $(realpath $path);
+	    path="$(/usr/bin/which $1 2>/dev/null)";
+	    path="$(realpath $path 2>/dev/null)";
+	    file "$path";
+
 	    whatis=$(whatis $1 2>/dev/null | \
-			 grep -e '\(1\)' -e '\(6\)' -e '\(8\)')
+			 grep -e '\(1\)' -e '\(6\)' -e '\(8\)');
 	    if [[ $? -eq 0 ]]; then
 		echo "$whatis";
+	    fi
+
+	    pkg="$(pacman -Qoq $path 2>/dev/null)";
+	    if [[ $? -ne 0 ]]; then
+		return;
+	    fi
+
+	    pacman="$(pacman -Qi $pkg 2>/dev/null)";
+	    if [[ $? -eq 0 ]]; then
+		echo "$pacman";
 	    fi
 	    ;;
 	*)
