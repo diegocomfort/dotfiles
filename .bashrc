@@ -67,7 +67,14 @@ which() {
 
     case "$(type -t $1)" in
 	"alias")
-	    type $1
+	    t=$(type $1);
+	    echo $t;
+	    cmd="$(echo "${t/"$1 is aliased to \`"/""}" | awk '{print $1}')";
+	    if [[ "$1" = "$cmd" ]]; then
+		which "$(/usr/bin/which "$1")";
+	    else
+		which $cmd;
+	    fi
 	    ;;
 	"keyword")
 	    echo "$1 is a keyword"
