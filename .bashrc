@@ -2,32 +2,30 @@
 # stdin=1
 # stderr=2
 
-alias ls="eza --color=always --classify=always"
-alias la="ls -a"
-alias lt="ls -lgHMm --header --total-size --git"
-alias llt="ls -lagHMm --header --total-size --git"
-alias l="ls -lgHMm --header --git"
-alias ll="ls -lagHMm --header --git"
-alias t="ls -T"
-alias ta="la -T"
-alias tl="ll -T"
-
-alias grep="grep --color=always"
-
-alias copy="xclip -selection clipboard"
-alias ff="fastfetch"
-alias sl="sl -10 -cdwa"
-alias simonsays="/usr/bin/sudo "
-alias sudo="/usr/bin/sudo "
-alias q="exit"
-alias c="clear"
+alias ls='eza --color=always --classify=always';
+alias la='ls -a';
+alias lt='ls -lgHMm --header --total-size --git';
+alias llt='ls -lagHMm --header --total-size --git';
+alias l='ls -lgHMm --header --git';
+alias ll='ls -lagHMm --header --git';
+alias t='ls -T';
+alias ta='la -T';
+alias tl='ll -T';
+alias grep='grep --color=always';
+alias copy='xclip -selection clipboard';
+alias ff='fastfetch';
+alias sl='sl -10 -cdwa';
+alias simonsays='/usr/bin/sudo ';
+alias sudo='/usr/bin/sudo ';
+alias q='exit';
+alias c='clear';
 # alias cat="bat --paging=never"
 
 # Check updates and noitfy if an update will be required
 # From https://forum.manjaro.org/t/root-tip-utility-script-check-if-updates-may-require-system-restart/14112
 cu() {
     reboot="(ucode|cryptsetup|linux|nvidia|mesa|systemd|wayland|xf86-video|xorg)"
-    updates=$(checkupdates)
+    updates=$(checkupdates);
     if [[ -z $updates ]]; then	# No updates
 	return;
     fi
