@@ -67,7 +67,9 @@ which() {
 	"alias")
 	    t=$(type $1);
 	    echo $t;
-	    cmd="$(echo "${t/"$1 is aliased to \`"/""}" | awk '{print $1}')";
+	    t="${t/"$1 is aliased to \`"/""}"; 
+	    t="${t::-1}";
+	    cmd="$(echo "$t" | awk '{print $1}')";
 	    if [[ "$1" = "$cmd" ]]; then
 		which "$(/usr/bin/which "$1")";
 	    else
