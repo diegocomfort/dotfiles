@@ -338,6 +338,16 @@ I use it to open curly braces
     (funcall (keymap-local-lookup "TAB" t)))
 #+end_src
 
+*** Exit
+#+begin_src emacs-lisp
+  (defun exit (yes-no)
+    "Exits emacs after user confirmation, and saves buffers."
+    (interactive "sAre you sure you want to quit Emacs? ")
+    (if (or (string-equal-ignore-case yes-no "y")
+	    (string-equal-ignore-case yes-no "yes"))
+	(save-buffers-kill-emacs)))
+#+end_src
+
 ** Aliases
 #+begin_src emacs-lisp
   (defalias 'ev-b 'eval-buffer)
