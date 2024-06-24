@@ -12,6 +12,8 @@ alias t='ls -T';
 alias ta='la -T';
 alias tl='ll -T';
 alias grep='grep --color=always';
+alias emacs='TERM=xterm-direct /usr/bin/emacsclient -t'
+alias start_emacs='/usr/bin/emacs --daemon'
 alias copy='xclip -selection clipboard';
 alias ff='fastfetch';
 alias sl='sl -10 -cdwa';

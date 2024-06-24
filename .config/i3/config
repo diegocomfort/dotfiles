@@ -353,7 +353,7 @@ exec --no-startup-id /usr/bin/dunst
 
 # Autostart apps as you like (startup apps)
 exec --no-startup-id sleep 1 && firefox
-exec --no-startup-id emacs --daemon
+exec --no-startup-id /usr/bin/emacs --daemon
 
 # TEMPORARY - init
 exec --no-startup-id unclutter --timeout 1
