@@ -5,6 +5,7 @@
       '(
 	Buffer-menu-delete
 	backward-sexp
+	backward-up-list
 	c-beginning-of-defun
 	c-beginning-of-statement
 	c-electric-brace
@@ -32,10 +33,13 @@
 	mark-sexp
 	open-line-and-indent
 	open-line-newline
+	org-cycle
 	org-delete-char
+	org-end-of-line
 	org-force-self-insert
 	org-kill-line
 	org-self-insert-command
+	org-yank
 	undo-redo
 	up-list
 	upcase-region
@@ -47,6 +51,9 @@
 	counsel-M-x
 	handle-switch-frame
 	helpful-key
+	move-dup-move-lines-down
+	move-dup-move-lines-up
+	org-export-dispatch
 	swiper-isearch
 	wdired-finish-edit
 	))

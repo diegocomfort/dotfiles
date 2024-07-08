@@ -223,7 +223,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 ** C Mode
 #+begin_src emacs-lisp
   (setq-default c-default-style "linux")
-  (add-hook 'c-mode-hook (lambda () (setq comment-start "//"
+  (add-hook 'c-mode-hook (lambda () (setq comment-start "// "
 					  comment-end   "")))
   (add-hook 'prog-mode-hook #'whitespace-mode)
   ;; (add-hook 'prog-mode-hook #'auto-fill-mode)
@@ -361,6 +361,7 @@ I use it to open curly braces
   (define-key prog-mode-map (kbd "C-c r") 'recompile)
   (define-key compilation-mode-map (kbd "C-c r") 'recompile)
   (global-set-key (kbd "C-c C-e") 'eval-and-replace)
+  (global-set-key (kbd "C-c e") 'eval-and-replace)
   (global-set-key (kbd "C-j") 'newline)
   (global-set-key (kbd "M-j") 'open-line-and-indent)
   (global-set-key (kbd "C-M-j") 'open-line-newline)
