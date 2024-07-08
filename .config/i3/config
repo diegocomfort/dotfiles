@@ -490,6 +490,9 @@ bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun \
 bindsym $mod+t exec --no-startup-id rofi -show window \
                 -config ~/.config/rofi/rofidmenu.rasi
 
+# rofi calc
+bindsym $mod+c exec --no-startup-id rofi -show calc -modi calc -no-show-match -no-sort
+
 #bindsym F10 exec --no-startup-id rofi -show window \
 #               -config ~/.config/rofi/rofidmenu.rasi
 
