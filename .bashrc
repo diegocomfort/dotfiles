@@ -12,9 +12,11 @@ alias t='ls -T';
 alias ta='la -T';
 alias tl='ll -T';
 alias grep='grep --color=always';
-alias emacs-nw='TERM=xterm-direct /usr/bin/emacsclient -t'
+alias less='less -R';
+alias e-nw='TERM=xterm-direct /usr/bin/emacsclient -t'
 alias start_emacs='/usr/bin/emacs --daemon'
 alias copy='xclip -selection clipboard';
+alias paste='xclip -selection clipboard -out';
 alias ff='fastfetch';
 alias sl='sl -10 -cdwa';
 alias simonsays='/usr/bin/sudo ';
@@ -163,6 +165,10 @@ upt() {
     fi
 }
 
+mkdir() {
+    /usr/bin/mkdir $@ && cd ${@: -1};
+}
+
 cd() {
     __zoxide_z "$@";
     if [[ $? -eq 0 ]]; then
@@ -202,8 +208,13 @@ cdt() {
     fi
 }
 
-reload() {
+r() {
     source ~/.bashrc;
+}
+
+kbd() {
+    setxkbmap -option ctrl:swapcaps
+    xset r rate 250
 }
 
 exit_code() {
