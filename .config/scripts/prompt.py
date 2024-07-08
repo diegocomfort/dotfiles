@@ -2,8 +2,9 @@
 
 from shutil import get_terminal_size
 from getpass import getuser
-from os import getcwd
+from os import getcwd, environ
 from sys import argv
+import re
 
 class Color:
     def __init__(self, r, g, b):
@@ -52,8 +53,17 @@ while len(gradient) < width:
 # Create prompt
 name = getuser()
 cwd = getcwd()
+homedir = environ["HOME"]
+if (len(name) + 1 + len(cwd) > width):
+	cwd = cwd.replace(homedir, "~")
+if (len(name) + 1 + len(cwd) > width):
+	dirs = cwd.split("/")
+	chars = int(((width - 1 - len(name)) - len(dirs[-1]) - len(dirs)) / (len(dirs) - 2))
+	for i in range(len(dirs) - 1):
+		dirs[i] = dirs[i][0:chars]
+	cwd = "/".join(dirs)
 message = name
-message += " " * (width - len(message) - len(cwd))
+message += " " * (width - len(name) - len(cwd))
 message += cwd
 if len(message) > width:
     message = "*" * width
@@ -83,3 +93,4 @@ if name == "root":
     print("%s # " % color_string_fg(color, exit_string))
 else:
     print("%s $ " % color_string_fg(color, exit_string))
+
