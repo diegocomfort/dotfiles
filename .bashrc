@@ -2,7 +2,7 @@
 # stdin=1
 # stderr=2
 
-alias ls='eza --color=always --classify=always';
+alias ls='eza --color=auto --classify=always';
 alias la='ls -a';
 alias lt='ls -lgHMm --header --total-size --git';
 alias llt='ls -lagHMm --header --total-size --git';
@@ -11,8 +11,10 @@ alias ll='ls -lagHMm --header --git';
 alias t='ls -T';
 alias ta='la -T';
 alias tl='ll -T';
-alias grep='grep --color=always';
+alias grep='grep --color=auto';
 alias less='less -R';
+alias objdump='objdump -M att-mnemonic,suffix'
+alias ip='ip --color=auto';
 alias e-nw='TERM=xterm-direct /usr/bin/emacsclient -t'
 alias start_emacs='/usr/bin/emacs --daemon'
 alias copy='xclip -selection clipboard';
@@ -58,65 +60,123 @@ eman() {
 
 # Better which
 which() {
-    if [[ $# -ne 1 ]]; then
-	for arg in "$@"; do
-	    echo "${arg}:";
-	    which $arg;
-	    echo;
-	done
+    if [[ $# -eq 0 ]]; then
+	cat <<EOF
+Usage: which [options...] commands...
+
+Options:
+	-h	print help message and exit
+	-v	verbose output (default)
+	-q	quiet output
+EOF
 	return;
     fi
 
-    case "$(type -t $1)" in
-	"alias")
-	    t=$(type $1);
-	    echo $t;
-	    t="${t/"$1 is aliased to \`"/""}"; 
-	    t="${t::-1}";
-	    cmd="$(echo "$t" | awk '{print $1}')";
-	    if [[ "$1" = "$cmd" ]]; then
-		which "$(/usr/bin/which "$1")";
-	    else
-		which $cmd;
-	    fi
-	    ;;
-	"keyword")
-	    echo "$1 is a keyword"
-	    help $1
-	    ;;
-	"builtin")
-	    echo "$1 is a builtin"
-	    help $1
-	    ;;
-	"function")
-	    type $1
-	    ;;
-	"file")
-	    path="$(/usr/bin/which $1 2>/dev/null)";
-	    path="$(realpath $path 2>/dev/null)";
-	    file "$path";
+    options_done=0
+    options=""
+    verbose=1
+    quiet=0
+    for arg in "$@"; do
+	if (( ! options_done )); then
+	    case "$arg" in
+		"-h")
+		    which;
+		    return;
+		    ;;
+		"-v")
+		    verbose=1;
+		    quiet=0;
+		    options="$options -v";
+		    continue;
+		    ;;
+		"-q")
+		    quiet=1;
+		    verbose=0;
+		    options="$options -q";
+		    continue;
+		    ;;
+		*)
+		    options_done=1;
+		    ;;
+	    esac
+	fi
 
-	    whatis=$(whatis $1 2>/dev/null | \
-			 grep -e '\(1\)' -e '\(6\)' -e '\(8\)');
-	    if [[ $? -eq 0 ]]; then
-		echo "$whatis";
-	    fi
+	if (( verbose )); then
+	    echo "$arg:";
+	fi
+	case "$(type -t "$arg")" in
+	    "alias")
+		t=$(type $arg);
+		if (( quiet )); then
+		    echo "${t/"$arg is aliased to \`"/""}";
+		else
+		    echo $t;
+		    t="${t/"$arg is aliased to \`"/""}";
+		    t="${t::-1}";
+		    cmd="$(echo "$t" | awk '{print $arg}')";
+		    if [[ "$arg" = "$cmd" ]]; then
+			which $options "$(/usr/bin/which "$1")";
+		    else
+			which $options $cmd;
+		    fi
+		fi
+		;;
+	    "keyword")
+		echo "$arg is a keyword"
+		if (( verbose )); then
+		    help $arg;
+		fi
+		;;
+	    "builtin")
+		echo "$arg is a builtin"
+		if (( verbose )); then
+		    help $arg;
+		fi
+		;;
+	    "function")
+		if (( quiet )); then
+		    echo "$arg is a function";
+		else
+		    type $arg
+		fi
+		;;
+	    "file")
+		path="$(/usr/bin/which $arg 2>/dev/null)";
+		path="$(realpath $path 2>/dev/null)";
+		if (( quiet )); then
+		    echo $path;
+		else
+		    file "$path";
+		    whatis=$(whatis $arg 2>/dev/null | \
+				 grep -e '\(1\)' -e '\(6\)' -e '\(8\)');
+		    if [[ $? -eq 0 ]]; then
+			echo "$whatis";
+		    fi
 
-	    pkg="$(pacman -Qoq $path 2>/dev/null)";
-	    if [[ $? -ne 0 ]]; then
-		return;
-	    fi
+		    pkg="$(pacman -Qoq $path 2>/dev/null)";
+		    if [[ $? -ne 0 ]]; then
+			return;
+		    fi
 
-	    pacman="$(pacman -Qi $pkg 2>/dev/null)";
-	    if [[ $? -eq 0 ]]; then
-		echo "$pacman";
-	    fi
-	    ;;
-	*)
-	    echo "bash: $1 not found";
-	    return 1;
-	    ;;
-    esac
+		    pacman="$(pacman -Qi $pkg 2>/dev/null)";
+		    if [[ $? -eq 0 ]]; then
+			echo "$pacman";
+		    fi
+		fi
+		;;
+	    *)
+		if (( verbose )); then
+		    echo "bash: $arg not found";
+		fi
+		;;
+	esac
+	if (( verbose )) && [[ "$arg" != "${@: -1}" ]]; then
+	    echo;
+	fi
+    done
+
+    return;
+
 }
 
 up() {
