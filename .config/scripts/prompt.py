@@ -4,6 +4,7 @@ from shutil import get_terminal_size
 from getpass import getuser
 from os import getcwd, environ
 from sys import argv
+import subprocess
 import re
 
 class Color:
@@ -51,7 +52,7 @@ while len(gradient) < width:
     gradient.append(Color(0,45,74))
 
 # Create prompt
-name = getuser()
+name = str(subprocess.run(["whoami"], capture_output=True).stdout)[2:-3]
 cwd = getcwd()
 homedir = environ["HOME"]
 if (len(name) + 1 + len(cwd) > width):
