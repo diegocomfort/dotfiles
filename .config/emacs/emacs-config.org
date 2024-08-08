@@ -231,6 +231,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t)
 #+end_src
+
 * Modes
 ** C-Mode
 #+begin_src emacs-lisp
@@ -274,7 +275,23 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 #+begin_src emacs-lisp
   (require 'org)
   (setq org-return-follows-link t)
-  (setq org-todo-keywords '((sequence "TODO" "IN PROGRESS" "DONE")))
+  (setq org-todo-keywords '((sequence "TODO" "IN PROGRESS"
+				      "DRAFTED" "FINISHED" "DONE")))
+  (setq org-todo-keyword-faces '(("TODO" .
+				  (:foreground "#983e1a"
+					       :weight bold :underline t))
+				 ("IN PROGRESS" .
+				  (:foreground "#f7a050"
+					       :weight bold :underline t))
+				 ("DRAFTED" .
+				  (:foreground "#f0fdff"
+					       :weight bold :underline t))
+				 ("FINISHED" .
+				  (:foreground "#3387c3"
+					       :weight bold :underline t))))
+  ;; `C-u C-x =' (`what-cursor-position')
+  ;; `org-headline-todo' and `org-headline-done' faces
+  ;; 
   (setq org-format-latex-options '(:foreground default
 					       :background default
 					       :scale 1.1
@@ -390,6 +407,7 @@ I use it to open curly braces
   (global-set-key (kbd "C-r") 'refresh-buffer)
 
   (global-unset-key (kbd "C-x C-n"))	; set-goal-colum
+  (global-unset-key (kbd "C-x f"))	; set-fill-colum
 #+end_src 
 
 ** Misc Elisp Configurations
