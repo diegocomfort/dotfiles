@@ -13,7 +13,7 @@ alias ta='la -T';
 alias tl='ll -T';
 alias grep='grep --color=auto';
 alias less='less -R';
-alias objdump='objdump -M att-mnemonic,suffix'
+alias objdump='objdump -M att,att-mnemonic,suffix'
 alias ip='ip --color=auto';
 alias e-nw='TERM=xterm-direct /usr/bin/emacsclient -t'
 alias start_emacs='/usr/bin/emacs --daemon'
@@ -26,6 +26,11 @@ alias sudo='/usr/bin/sudo ';
 alias q='exit';
 alias c='clear';
 # alias cat="bat --paging=never"
+alias val="valgrind --leak-check=full \
+--show-leak-kinds=all \
+--track-origins=yes \
+--verbose \
+--log-file=valgrind-out.txt";
 
 # Check updates and noitfy if an update will be required
 # From https://forum.manjaro.org/t/root-tip-utility-script-check-if-updates-may-require-system-restart/14112
