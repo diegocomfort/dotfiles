@@ -21,7 +21,8 @@ Tsoding uses, but with the Endeavour image color scheme
 		  prog-mode-hook
 		  conf-mode-hook
 		  text-mode-hook
-		  dired-mode-hook))
+		  dired-mode-hook
+		  Man-mode-hook))
     (add-hook mode '(lambda () (display-line-numbers-mode 1))))
 #+end_src 
 
