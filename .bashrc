@@ -11,16 +11,16 @@ alias ll='ls -lagHMm --header --git';
 alias t='ls -T';
 alias ta='la -T';
 alias tl='ll -T';
-alias grep='grep --color=auto';
-alias less='less -R';
-alias objdump='objdump -M att,att-mnemonic,suffix'
-alias ip='ip --color=auto';
+alias grep='/usr/bin/grep --color=auto';
+alias less='/usr/bin/less -R';
+alias objdump='/usr/bin/objdump -M att,att-mnemonic,suffix'
+alias ip='/usr/bin/ip --color=auto';
 alias e-nw='TERM=xterm-direct /usr/bin/emacsclient -t'
 alias start_emacs='/usr/bin/emacs --daemon'
 alias copy='xclip -selection clipboard';
 alias paste='xclip -selection clipboard -out';
 alias ff='fastfetch';
-alias sl='sl -10 -cdwa';
+alias sl='/usr/bin/sl -10 -cdwa';
 alias simonsays='/usr/bin/sudo ';
 alias sudo='/usr/bin/sudo ';
 alias q='exit';
@@ -31,6 +31,7 @@ alias val="valgrind --leak-check=full \
 --track-origins=yes \
 --verbose \
 --log-file=valgrind-out.txt";
+alias date='/usr/bin/date "+%A %d %B(%m) %Y %H:%M:%S %Z(%:z)"';
 
 # Check updates and noitfy if an update will be required
 # From https://forum.manjaro.org/t/root-tip-utility-script-check-if-updates-may-require-system-restart/14112
