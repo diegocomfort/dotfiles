@@ -20,11 +20,13 @@
 	c-end-of-statement
 	c-indent-line-or-region
 	counsel-yank-pop
+	dired-flag-file-deletion
 	dired-undo
 	downcase-region
 	electric-newline-and-maybe-indent
 	end-of-buffer
 	eval-and-replace
+	forward-sentence
 	forward-sexp
 	goto-line
 	indent-for-tab-command
@@ -33,6 +35,7 @@
 	mark-sexp
 	open-line-and-indent
 	open-line-newline
+	org-beginning-of-line
 	org-cycle
 	org-delete-char
 	org-end-of-line
