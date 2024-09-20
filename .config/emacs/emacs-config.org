@@ -17,7 +17,7 @@ Tsoding uses, but with the Endeavour image color scheme
   (setq display-line-numbers-type 'visual)
   (global-display-line-numbers-mode -1)
   (require 'conf-mode)
-  (dolist (mode '(org-mode-hook
+  (dolist (mode '(org-mode-hook		; All the modes to have line numbers
 		  prog-mode-hook
 		  conf-mode-hook
 		  text-mode-hook
@@ -233,6 +233,24 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
   (setq reftex-plug-into-AUCTeX t)
 #+end_src
 
+** Emacs Everywhere
+#+begin_src emacs-lisp
+  (use-package emacs-everywhere
+    :ensure t)
+#+end_src
+
+** Rainbow mode
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :ensure t)
+#+end_src
+
+** Kotlin
+#+begin_src emacs-lisp
+  (use-package kotlin-mode
+    :ensure t)
+#+end_src
+
 * Modes
 ** C-Mode
 #+begin_src emacs-lisp
@@ -319,11 +337,25 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
   (add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+end_src
 
+** Elisp mode
+#+begin_src emacs-lisp
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+#+end_src
+
 * Elisp
+** Aliases
+#+begin_src emacs-lisp
+  (defalias 'ev-b 'eval-buffer)
+  (defalias 'ev-r 'eval-region)
+  (defalias 'printf 'format)
+#+end_src 
+**  Variables
+#+begin_src emacs-lisp
+#+end_src
 ** Functions
 *** Finding/Opening the init file
 #+begin_src emacs-lisp
-  (defun open-config-file ()
+  (defun my/open-config-file ()
     "Open the user init file"
     (interactive)
     (find-file (expand-file-name "emacs-config.org" user-emacs-directory)))
@@ -331,7 +363,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 
 *** Rerfeshing/Reverting the buffer
 #+begin_src emacs-lisp
-  (defun refresh-buffer ()
+  (defun my/refresh-buffer ()
     "Revert/Refresh buffer without confirmation."
     (interactive)
     (revert-buffer :ignore-auto :noconfirm))
@@ -340,7 +372,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 *** Eval and Replace
 From [[https://emacsredux.com/blog/2013/06/21/eval-and-replace/][Emacs Redux]]
 #+begin_src emacs-lisp
-  (defun eval-and-replace ()
+  (defun my/eval-and-replace ()
     "Replace the preceding sexp with its value."
     (interactive)
     (backward-kill-sexp)
@@ -353,7 +385,7 @@ From [[https://emacsredux.com/blog/2013/06/21/eval-and-replace/][Emacs Redux]]
 *** Reverse Newline (open-line)
 From [[https://www.reddit.com/r/emacs/comments/rcfggm/comment/hnu9mvy/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button][u/7890yuiop]]
 #+begin_src emacs-lisp
-  (defun open-line-and-indent (n)
+  (defun my/open-line-and-indent (n)
     "Like `newline-and-indent' for the `open-line' command."
     (interactive "*p")
     (let ((eol (copy-marker (line-end-position))))
@@ -365,17 +397,17 @@ From [[https://www.reddit.com/r/emacs/comments/rcfggm/comment/hnu9mvy/?utm_sourc
 *** Open-line and Newline
 I use it to open curly braces
 #+begin_src emacs-lisp
-  (defun open-line-newline ()
+  (defun my/open-line-newline ()
     "Preforms an `open-line-and-indent', then a `newline'."
     (interactive)
-    (open-line-and-indent 1)
+    (my/open-line-and-indent 1)
     (newline)
     (funcall (keymap-local-lookup "TAB" t)))
 #+end_src
 
 *** Exit
 #+begin_src emacs-lisp
-  (defun exit (yes-no)
+  (defun my/exit (yes-no)
     "Exits emacs after user confirmation, and saves buffers."
     (interactive "sAre you sure you want to quit Emacs? ")
     (if (or (string-equal-ignore-case yes-no "y")
@@ -383,11 +415,16 @@ I use it to open curly braces
 	(save-buffers-kill-emacs)))
 #+end_src
 
-** Aliases
+*** Create Blank Buffer
+Taken from [[https://stackoverflow.com/a/25792276]]
 #+begin_src emacs-lisp
-  (defalias 'ev-b 'eval-buffer)
-  (defalias 'ev-r 'eval-region)
-#+end_src 
+  (defun my/create-blank-buffer ()
+    "Create a new frame with a new empty buffer."
+    (interactive)
+    (let ((buffer (generate-new-buffer (generate-new-buffer-name "blank"))))
+      (switch-to-buffer buffer)
+      (text-mode)))
+#+end_src
 
 ** Keybinds
 #+begin_src emacs-lisp
@@ -398,17 +435,18 @@ I use it to open curly braces
   (global-set-key (kbd "C-c C-e") 'eval-and-replace)
   (global-set-key (kbd "C-c e") 'eval-and-replace)
   (global-set-key (kbd "C-j") 'newline)
-  (global-set-key (kbd "M-j") 'open-line-and-indent)
-  (global-set-key (kbd "C-M-j") 'open-line-newline)
+  (global-set-key (kbd "M-j") 'my/open-line-and-indent)
+  (global-set-key (kbd "C-M-j") 'my/open-line-newline)
   (global-set-key (kbd "C-M-p") 'backward-up-list)
   (global-set-key (kbd "C-M-n") 'up-list)
   (global-set-key (kbd "M-SPC") 'set-mark-command)
   (define-key prog-mode-map (kbd "C-;") 'comment-line)
   (define-key conf-mode-map (kbd "C-;") 'comment-line)
-  (global-set-key (kbd "C-r") 'refresh-buffer)
+  (global-set-key (kbd "C-r") 'my/refresh-buffer)
 
   (global-unset-key (kbd "C-x C-n"))	; set-goal-colum
   (global-unset-key (kbd "C-x f"))	; set-fill-colum
+  (global-unset-key (kbd "C-z"))	; suspend-frame
 #+end_src 
 
 ** Misc Elisp Configurations
@@ -418,5 +456,5 @@ I use it to open curly braces
 
 ** After-init hooks
 #+begin_src emacs-lisp
-  (add-hook 'after-init-hook 'open-config-file)
+  (add-hook 'after-init-hook 'my/open-config-file)
 #+end_src
