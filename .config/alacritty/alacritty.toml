@@ -1,7 +1,9 @@
 # My alacritty configuration
-
-shell = "/usr/bin/bash"
+[general]
 working_directory = "/home/diego"
+
+[terminal]
+shell = "/usr/bin/bash"
 
 [window]
 padding = { x = 5, y = 5 }
