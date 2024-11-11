@@ -21,3 +21,42 @@ background = "#002D4A"
 style = { shape = "Block", blinking = "On" }
 blink_interval = 500
 blink_timeout = 0
+
+[mouse]
+hide_when_typing = true
+
+[keyboard]
+bindings = [
+	 # General (All modes)
+	 {key = "Y", mods = "Control", mode = "~Vi", action = "Paste"}, # Yank
+	 {key = "Y", mods = "Control", mode = "Vi|Search", action = "Paste"},
+	 {key = "W", mods = "Alt", mode = "~Vi", action = "Copy"}, # Kill
+	 {key = "W", mods = "Alt", mode = "Vi|Search", action = "Copy"},
+	 # {key = "S", mods = "Control", mode = "~Search", action = "SearchForward"}, # Search
+	 {key = "V", mods = "Control", mode = "~Vi", action = "ScrollPageDown"}, # Scroll Down
+	 {key = "V", mods = "Control", mode = "Vi|~Search", action = "ScrollPageDown"},
+	 {key = "V", mods = "Alt", mode = "~Vi", action = "ScrollPageUp"}, # Scroll Up
+	 {key = "V", mods = "Alt", mode = "Vi|~Search", action = "ScrollPageUp"},
+	 {key = "<", mods = "Alt|Shift", mode = "~Vi", action = "ScrollToTop"}, # Scroll To Top
+	 {key = "<", mods = "Alt|Shift", mode = "Vi|~Search", action = "ScrollToTop"},
+	 {key = ">", mods = "Alt|Shift", mode = "~Vi", action = "ScrollToBottom"}, # Scroll To Bottom
+	 {key = ">", mods = "Alt|Shift", mode = "Vi|~Search", action = "ScrollToBottom"},
+	 # Search
+	 {key = "Backspace", mods = "Control", mode = "Search", action = "SearchDeleteWord"},
+	 {key = "Backspace", mods = "Control|Shift", mode = "Search", action = "SearchClear"},
+	 # Vi (made to be like Emacs)
+	 {key = "P", mods = "Control", mode = "Vi|~Search", action = "Up"}, # C-p
+	 {key = "N", mods = "Control", mode = "Vi|~Search", action = "Down"}, # C-n
+	 {key = "B", mods = "Control", mode = "Vi|~Search", action = "Left"}, # C-b
+	 {key = "F", mods = "Control", mode = "Vi|~Search", action = "Right"}, # C-f
+	 {key = "A", mods = "Control", mode = "Vi|~Search", action = "First"}, # C-a
+	 {key = "E", mods = "Control", mode = "Vi|~Search", action = "Last"}, # C-e
+	 {key = "E", mods = "Control", mode = "Vi|~Search", action = "Right"},
+	 {key = "M", mods = "Alt", mode = "Vi|~Search", action = "FirstOccupied"}, # M-m
+	 {key = "F", mods = "Alt", mode = "Vi|~Search", action = "SemanticRightEnd"}, # M-f
+	 {key = "F", mods = "Alt", mode = "Vi|~Search", action = "Right"},
+	 {key = "B", mods = "Alt", mode = "Vi|~Search", action = "SemanticLeft"}, # M-b
+	 {key = "Space", mods = "Control", mode = "Vi|~Search", action = "ToggleNormalSelection"}, # C-SPC
+	 {key = "Space", mods = "Alt", mode = "Vi|~Search", action = "ToggleBlockSelection"}, # M-SPC
+	 {key = "L", mods = "Control", mode = "Vi|~Search", action = "CenterAroundViCursor"}, # C-l
+]
