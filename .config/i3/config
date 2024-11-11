@@ -370,7 +370,6 @@ $exec /usr/bin/emacs --daemon
 # TEMPORARY - init
 $exec unclutter --timeout 1
 exec_always --no-startup-id xset r rate 250
-exec_always --no-startup-id setxkbmap -option ctrl:swapcaps
 
 ###############
 # system tray #
