@@ -15,14 +15,14 @@ alias grep='/usr/bin/grep --color=auto';
 alias less='/usr/bin/less -R';
 alias objdump='/usr/bin/objdump -M att,att-mnemonic,suffix'
 alias ip='/usr/bin/ip --color=auto';
-alias e-nw='TERM=xterm-direct /usr/bin/emacsclient -t'
+alias et='TERM=xterm-direct /usr/bin/emacsclient -t'
 alias start_emacs='/usr/bin/emacs --daemon'
 alias copy='xclip -selection clipboard';
 alias paste='xclip -selection clipboard -out';
 alias ff='fastfetch';
 alias sl='/usr/bin/sl -10 -cdwa';
-alias simonsays='/usr/bin/sudo ';
-alias sudo='/usr/bin/sudo ';
+alias simonsays='sudo ';
+alias sudo='sudo ';
 alias q='exit';
 alias c='clear';
 # alias cat="bat --paging=never"
@@ -31,7 +31,8 @@ alias val="valgrind --leak-check=full \
 --track-origins=yes \
 --verbose \
 --log-file=valgrind-out.txt";
-alias date='/usr/bin/date "+%A %d %B(%m) %Y %H:%M:%S %Z(%:z)"';
+alias date='/usr/bin/date "+%A %d %B(%m) %Y %H:%M:%S %Z(UTC%:z)"';
+alias qemu='qemu-system-x86_64'
 
 # Check updates and noitfy if an update will be required
 # From https://forum.manjaro.org/t/root-tip-utility-script-check-if-updates-may-require-system-restart/14112
@@ -114,7 +115,9 @@ EOF
 	    "alias")
 		t=$(type $arg);
 		if (( quiet )); then
-		    echo "${t/"$arg is aliased to \`"/""}";
+		    t="${t/"$arg is aliased to \`"/""}";
+		    t="${t::-1}";
+		    echo "${t}";
 		else
 		    echo $t;
 		    t="${t/"$arg is aliased to \`"/""}";
