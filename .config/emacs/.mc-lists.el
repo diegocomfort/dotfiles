@@ -33,14 +33,17 @@
 	indent-region
 	kill-region
 	mark-sexp
+	my/open-line-and-indent
 	open-line-and-indent
 	open-line-newline
 	org-beginning-of-line
 	org-cycle
 	org-delete-char
 	org-end-of-line
+	org-fill-paragraph
 	org-force-self-insert
 	org-kill-line
+	org-return-and-maybe-indent
 	org-self-insert-command
 	org-yank
 	undo-redo

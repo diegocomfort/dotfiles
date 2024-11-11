@@ -221,7 +221,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 					(add-hook 'before-save-hook 'fish_indent-before-save))))
 #+end_src
 
-** Auctex
+** Auctex (LaTeX)
 #+begin_src emacs-lisp
   (use-package auctex
     :ensure t)
@@ -251,7 +251,31 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
     :ensure t)
 #+end_src
 
+** Yadm (tramp)
+Stolen from [[https://philjackson.github.io/yadm/emacs/magit/2021/07/25/using-yadm-via-magit/][here]]
+I love this
+#+begin_src emacs-lisp
+  (use-package tramp
+    :config
+    (add-to-list 'tramp-methods
+		 '("yadm"
+		   (tramp-login-program "yadm")
+		   (tramp-login-args (("enter")))
+		   (tramp-login-env (("SHELL") ("/bin/sh")))
+		   (tramp-remote-shell "/bin/sh")
+		   (tramp-remote-shell-args ("-c")))))
+
+  (defun yadm ()
+    (interactive)
+    (magit-status "/yadm::"))
+#+end_src
+
 * Modes
+** Prog-mode/general
+#+begin_src emacs-lisp
+  (setq-default standard-indent 8)
+#+end_src
+
 ** C-Mode
 #+begin_src emacs-lisp
   (setq-default c-default-style "linux")
@@ -267,7 +291,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
   (setq asm-comment-char ?#)
 #+end_src
 
-** Whitespace 
+** Whitespace-mode
 #+begin_src emacs-lisp
   ;; From whitespace-display-mappings
   (setq whitespace-display-mappings '((space-mark   ?\     [?·]     [?.])		; space - middle dot
@@ -319,27 +343,40 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 					       :html-scale 1.0
 					       :matchers
 					       ("begin" "$1" "$" "$$" "\\(" "\\[")))
+  ; https://emacs.stackexchange.com/a/27901/45410
+  (setf (nth 4 org-emphasis-regexp-components) 10)
+
   (define-key org-mode-map (kbd "C-M-e") 'org-forward-paragraph)
   (define-key org-mode-map (kbd "C-M-a") 'org-backward-paragraph)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
 #+end_src
 
-** Grep
+** Grep-mode
 #+begin_src emacs-lisp
   (require 'grep)
   (grep-apply-setting 'grep-command "grep --color=always --null -irn -- ")
   (grep-apply-setting 'grep-use-null-device nil)
 #+end_src
 
-** Shell
+** Shell-mode
 #+begin_src emacs-lisp
   ;; (lambda () (setq fill-column 80))
-  (add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode -1)))
+  ;; (add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+end_src
 
-** Elisp mode
+** Elisp-mode /  emacs-lisp-mode
 #+begin_src emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+#+end_src
+
+** Dired-mode
+#+begin_src emacs-lisp
+  (setq dired-auto-revert-buffer 'dired-directory-changed-p)
+#+end_src
+
+** sh-mode shell-script-mode
+#+begin_src emacs-lisp  
+  (setq-default sh-basic-offset 8)
 #+end_src
 
 * Elisp
@@ -352,6 +389,7 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 **  Variables
 #+begin_src emacs-lisp
 #+end_src
+
 ** Functions
 *** Finding/Opening the init file
 #+begin_src emacs-lisp
@@ -426,23 +464,62 @@ Taken from [[https://stackoverflow.com/a/25792276]]
       (text-mode)))
 #+end_src
 
+*** Duplicate line
+Stolen fom a mista Tsoding
+#+begin_src emacs-lisp
+  (defun my/duplicate-line ()
+    "Duplicate current line, but moving the cursor to the same spot
+   in the new line"
+    (interactive)
+    (let ((column (- (point) (point-at-bol)))
+	  (line (let ((s (thing-at-point 'line t)))
+		 (if s (string-remove-suffix "\n" s) ""))))
+      (move-end-of-line 1)
+      (newline)
+      (insert line)
+      (move-beginning-of-line 1)
+      (forward-char column)))
+#+end_src
+
+*** Scrolling half pages
+Modified from [[https://www.emacswiki.org/emacs/HalfScrolling][Emacs Wiki]]
+#+begin_src emacs-lisp
+  (defun my/window-half-height ()
+    (max 1 (/ (1- (window-height (selected-window))) 2)))
+
+  (defun my/scroll-up-half-page ()
+    (interactive)
+    (scroll-down (my/window-half-height))
+    (recenter-top-bottom))
+
+  (defun my/scroll-down-half-page ()
+    (interactive)
+    (scroll-up (my/window-half-height))
+    (recenter-top-bottom))
+#+end_src
+
 ** Keybinds
 #+begin_src emacs-lisp
   (define-key prog-mode-map (kbd "C-c c") 'compile)
   (define-key compilation-mode-map (kbd "C-c c") 'compile)
   (define-key prog-mode-map (kbd "C-c r") 'recompile)
   (define-key compilation-mode-map (kbd "C-c r") 'recompile)
-  (global-set-key (kbd "C-c C-e") 'eval-and-replace)
-  (global-set-key (kbd "C-c e") 'eval-and-replace)
+  (global-set-key (kbd "C-c C-e") 'my/eval-and-replace)
+  (global-set-key (kbd "C-c e") 'my/eval-and-replace)
   (global-set-key (kbd "C-j") 'newline)
   (global-set-key (kbd "M-j") 'my/open-line-and-indent)
   (global-set-key (kbd "C-M-j") 'my/open-line-newline)
   (global-set-key (kbd "C-M-p") 'backward-up-list)
   (global-set-key (kbd "C-M-n") 'up-list)
-  (global-set-key (kbd "M-SPC") 'set-mark-command)
+  (global-set-key (kbd "M-SPC") 'rectangle-mark-mode)
   (define-key prog-mode-map (kbd "C-;") 'comment-line)
   (define-key conf-mode-map (kbd "C-;") 'comment-line)
-  (global-set-key (kbd "C-r") 'my/refresh-buffer)
+  ; (global-set-key (kbd "C-r") 'my/refresh-buffer)
+  (global-set-key (kbd "C-r") 'my/duplicate-line)
+  (global-set-key (kbd "C-M-u") 'my/scroll-up-half-page)
+  (global-set-key (kbd "C-M-d") 'my/scroll-down-half-page)
+
+  (define-key key-translation-map (kbd "ESC") (kbd "ESC ESC ESC"))
 
   (global-unset-key (kbd "C-x C-n"))	; set-goal-colum
   (global-unset-key (kbd "C-x f"))	; set-fill-colum
