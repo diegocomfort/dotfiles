@@ -1,0 +1,3 @@
+#+title: My Dotfiles
+
+Managed with [[https://yadm.io][yadm]].
