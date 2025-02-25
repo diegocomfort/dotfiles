@@ -26,11 +26,6 @@ alias sudo='sudo ';
 alias q='exit';
 alias c='clear';
 # alias cat="bat --paging=never"
-alias val="valgrind --leak-check=full \
---show-leak-kinds=all \
---track-origins=yes \
---verbose \
---log-file=valgrind-out.txt";
 alias date='/usr/bin/date "+%A %d %B(%m) %Y %H:%M:%S %Z(UTC%:z)"';
 alias qemu='qemu-system-x86_64'
 
@@ -282,7 +277,6 @@ r() {
 }
 
 kbd() {
-    setxkbmap -option ctrl:swapcaps
     xset r rate 250
 }
 
@@ -290,6 +284,16 @@ exit_code() {
     code=$?;
     echo $code;
     return $code;
+}
+
+# to blank-out a (samll) terminal
+blank() {
+    python -c 'print("\n" * 20)';
+}
+
+# remove medata w/ ffmpeg
+ffstrip() {
+	ffmpeg -i $1 -map_metadata -1 -c:v copy -c:a copy -fflags +bitexact -flags:v +bitexact -flags:a +bitexact $2
 }
 
 # Seems to be breaking bash
