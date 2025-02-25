@@ -22,9 +22,10 @@ Tsoding uses, but with the Endeavour image color scheme
 		  conf-mode-hook
 		  text-mode-hook
 		  dired-mode-hook
-		  Man-mode-hook))
-    (add-hook mode '(lambda () (display-line-numbers-mode 1))))
-#+end_src 
+		  Man-mode-hook
+		  helpful-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 1))))
+		    #+end_src 
 
 ** Auto-Save + Backups
 Code taken from this [[https://stackoverflow.com/a/18330742][answer]] on Stack Overflow.
@@ -87,19 +88,35 @@ use i3 navigation commands instead of the C-x crap from Emacs
   (show-paren-mode -1)
 #+end_src
 
-** Single Space After Sentences
+** Sentences
+*** Single Space After Sentences
 This makes `forward-setence` (M-e) and `backward-sentence` (M-a) work
 properly
 #+begin_src emacs-lisp
   (setq sentence-end-double-space nil)
 #+end_src
 
+*** Sentence end
+Allows '.*' (a period and a star), '._', and './' to be a sentence end
+(for org markup)
+
+                                               vvvv
+#+begin_src emacs-lisp
+  (setq-default sentence-end "\\([.?!…‽][]\"'”’\\*/_)}»›]*\\($\\|[	  ]\\)\\|[。．？！]+\\)[  	
+]*")
+#+end_src
+
 * Packages
 ** Use-Package
+TODO: clean-up all use-package statements by
+  1. removing :ensure t
+  2. using :init, :config, :bind, and other keywords properly
+See the GitHub [[https://github.com/jwiegley/use-package][repo]] for more info
 #+begin_src emacs-lisp
   (unless (package-installed-p 'use-package)
     (package-install 'use-package))
   (require 'use-package)
+  (require 'use-package-ensure)
   (setq use-package-always-ensure t)    ; Doesn't seem to work for some reason
 #+end_src 
 
@@ -213,15 +230,19 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
     :ensure t)
 #+end_src
 
-** Fish mode
+** pdf-tools
 #+begin_src emacs-lisp
-  (use-package fish-mode
-    :ensure t
-    :config (add-hook 'fish-mode-hook (lambda ()
-					(add-hook 'before-save-hook 'fish_indent-before-save))))
+  (use-package pdf-tools
+    :ensure t)
+  (pdf-tools-install)  ; Standard activation command
+  (pdf-loader-install) ; On demand loading, leads to faster startup time
+
+  					  ;(add-hook 'pdf-view-mode-hook 'auto-revert-mode)
 #+end_src
 
 ** Auctex (LaTeX)
+To use TeX/LaTeX, open a ~.tex~ file, ~C-c C-a~ to (re)compile, and
+~C-c C-v~ to view it in a ~pdf-tools~ buffer
 #+begin_src emacs-lisp
   (use-package auctex
     :ensure t)
@@ -231,6 +252,23 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t)
+
+  (setq TeX-view-program-selection '(((output-dvi has-no-display-manager)
+				      "dvi2tty")
+				     ((output-dvi style-pstricks)
+				      "dvips and gv")
+				     (output-dvi "xdvi")
+				     (output-pdf "PDF Tools") ; <----
+				     (output-html "xdg-open")))
+  (setq font-latex-fontify-script nil)
+
+  (add-hook 'TeX-after-compilation-finished-functions
+	    #'TeX-revert-document-buffer)
+
+  (tex-mode)				; Have to do this shit or else
+  (org-mode)				; TeX-mode-map is undefined
+  (define-key TeX-mode-map (kbd "C-c c") 'TeX-command-run-all)
+  (define-key TeX-mode-map (kbd "C-c r") 'TeX-command-run-all)
 #+end_src
 
 ** Emacs Everywhere
@@ -242,12 +280,6 @@ I'm using the [[https://github.com/dbordak/telephone-line/blob/master/examples.o
 ** Rainbow mode
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
-    :ensure t)
-#+end_src
-
-** Kotlin
-#+begin_src emacs-lisp
-  (use-package kotlin-mode
     :ensure t)
 #+end_src
 
@@ -270,13 +302,37 @@ I love this
     (magit-status "/yadm::"))
 #+end_src
 
+** speed-type (type test)
+#+begin_src emacs-lisp
+  (use-package speed-type)
+#+end_src
+
+** Emacs IPython Notebook (Jupyter)
+[[https://millejoh.github.io/emacs-ipython-notebook/][Documentation]]
+
+Installed ~jupyter-notebook~ (pacman) for this
+
+To use Jupyter, run ~jupyter notebook --no-browser --port 9999~
+([[https://wiki.archlinux.org/title/Jupyter][source]]) in a terminal, and then in emacs run ~ein:login~ ([[https://github.com/millejoh/emacs-ipython-notebook/issues/248][source]])
+
+#+begin_src emacs-lisp  
+  (use-package ein
+    :config
+    (require 'ein)
+    (require 'ein-notebook)
+    (setq ein:jupyter-server-use-subcommand "server")
+    :custom
+    (ein:output-area-inlined-images t)
+    (ein:slice-image t))
+#+end_src
+
 * Modes
-** Prog-mode/general
+** prog-mode & general
 #+begin_src emacs-lisp
   (setq-default standard-indent 8)
 #+end_src
 
-** C-Mode
+** c-Mode
 #+begin_src emacs-lisp
   (setq-default c-default-style "linux")
   (add-hook 'c-mode-hook (lambda () (setq comment-start "// "
@@ -291,7 +347,7 @@ I love this
   (setq asm-comment-char ?#)
 #+end_src
 
-** Whitespace-mode
+** whitespace-mode
 #+begin_src emacs-lisp
   ;; From whitespace-display-mappings
   (setq whitespace-display-mappings '((space-mark   ?\     [?·]     [?.])		; space - middle dot
@@ -314,7 +370,7 @@ I love this
 				      ))
 #+end_src
 
-** Org-mode
+** org-mode
 #+begin_src emacs-lisp
   (require 'org)
   (setq org-return-follows-link t)
@@ -345,26 +401,27 @@ I love this
 					       ("begin" "$1" "$" "$$" "\\(" "\\[")))
   ; https://emacs.stackexchange.com/a/27901/45410
   (setf (nth 4 org-emphasis-regexp-components) 10)
+  (load-library "org")
 
   (define-key org-mode-map (kbd "C-M-e") 'org-forward-paragraph)
   (define-key org-mode-map (kbd "C-M-a") 'org-backward-paragraph)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
 #+end_src
 
-** Grep-mode
+** grep-mode
 #+begin_src emacs-lisp
   (require 'grep)
   (grep-apply-setting 'grep-command "grep --color=always --null -irn -- ")
   (grep-apply-setting 'grep-use-null-device nil)
 #+end_src
 
-** Shell-mode
+** shell-mode
 #+begin_src emacs-lisp
   ;; (lambda () (setq fill-column 80))
   ;; (add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+end_src
 
-** Elisp-mode /  emacs-lisp-mode
+** elisp-mode /  emacs-lisp-mode
 #+begin_src emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 #+end_src
@@ -379,14 +436,28 @@ I love this
   (setq-default sh-basic-offset 8)
 #+end_src
 
+** python-mode
+Make moving sexp's actually work
+https://emacs.stackexchange.com/a/15244/45410
+#+begin_src emacs-lisp  
+  (add-hook 'python-mode-hook
+	    (lambda ()
+	      (setq forward-sexp-function nil)
+	      (whitespace-mode -1)
+	      (replace-regexp "grader.check\\((.+)\\)" "grader.check(\\1, globals())")))
+#+end_src
+
 * Elisp
 ** Aliases
 #+begin_src emacs-lisp
   (defalias 'ev-b 'eval-buffer)
   (defalias 'ev-r 'eval-region)
   (defalias 'printf 'format)
+  (defalias 'chdir 'cd)
+  (defalias 'wc 'count-words)
 #+end_src 
-**  Variables
+
+** Variables
 #+begin_src emacs-lisp
 #+end_src
 
@@ -462,41 +533,34 @@ Taken from [[https://stackoverflow.com/a/25792276]]
     (let ((buffer (generate-new-buffer (generate-new-buffer-name "blank"))))
       (switch-to-buffer buffer)
       (text-mode)))
+  (defalias 'my/blank-buffer 'my/create-blank-buffer)
+#+end_src
+And switch it to a temporary org mode
+#+begin_src emacs-lisp
+  (defun my/tmp-org-mode ()
+    (interactive)
+    (org-mode)
+    (auto-fill-mode -1)
+    (visual-line-mode))
 #+end_src
 
 *** Duplicate line
 Stolen fom a mista Tsoding
 #+begin_src emacs-lisp
-  (defun my/duplicate-line ()
+  (defun my/duplicate-line (n)
     "Duplicate current line, but moving the cursor to the same spot
    in the new line"
-    (interactive)
-    (let ((column (- (point) (point-at-bol)))
-	  (line (let ((s (thing-at-point 'line t)))
-		 (if s (string-remove-suffix "\n" s) ""))))
-      (move-end-of-line 1)
-      (newline)
-      (insert line)
-      (move-beginning-of-line 1)
-      (forward-char column)))
-#+end_src
-
-*** Scrolling half pages
-Modified from [[https://www.emacswiki.org/emacs/HalfScrolling][Emacs Wiki]]
-#+begin_src emacs-lisp
-  (defun my/window-half-height ()
-    (max 1 (/ (1- (window-height (selected-window))) 2)))
-
-  (defun my/scroll-up-half-page ()
-    (interactive)
-    (scroll-down (my/window-half-height))
-    (recenter-top-bottom))
-
-  (defun my/scroll-down-half-page ()
-    (interactive)
-    (scroll-up (my/window-half-height))
-    (recenter-top-bottom))
-#+end_src
+    (interactive "p")
+    (dotimes (number n)
+      (let ((column (- (point) (point-at-bol)))
+	    (line (let ((s (thing-at-point 'line t)))
+		    (if s (string-remove-suffix "\n" s) ""))))
+	(move-end-of-line 1)
+	(newline)
+	(insert line)
+	(move-beginning-of-line 1)
+	(forward-char column))))
+      #+end_src
 
 ** Keybinds
 #+begin_src emacs-lisp
@@ -514,15 +578,17 @@ Modified from [[https://www.emacswiki.org/emacs/HalfScrolling][Emacs Wiki]]
   (global-set-key (kbd "M-SPC") 'rectangle-mark-mode)
   (define-key prog-mode-map (kbd "C-;") 'comment-line)
   (define-key conf-mode-map (kbd "C-;") 'comment-line)
-  ; (global-set-key (kbd "C-r") 'my/refresh-buffer)
+					  ; (global-set-key (kbd "C-r") 'my/refresh-buffer)
   (global-set-key (kbd "C-r") 'my/duplicate-line)
-  (global-set-key (kbd "C-M-u") 'my/scroll-up-half-page)
-  (global-set-key (kbd "C-M-d") 'my/scroll-down-half-page)
+  (global-set-key (kbd "C-m") 'forward-whitespace)
+  (global-set-key (kbd "C-M-y") 'mouse-yank-primary)
 
+					  ; prevents Emacs' "sticky" ESC key behavior with my keyd config
   (define-key key-translation-map (kbd "ESC") (kbd "ESC ESC ESC"))
 
   (global-unset-key (kbd "C-x C-n"))	; set-goal-colum
   (global-unset-key (kbd "C-x f"))	; set-fill-colum
+  (global-unset-key (kbd "C-x C-c"))	; I use Win-Shift-q (s-S-q) to close windows
   (global-unset-key (kbd "C-z"))	; suspend-frame
 #+end_src 
 

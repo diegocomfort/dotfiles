@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
 	Buffer-menu-delete
+	TeX-insert-backslash
 	backward-sexp
 	backward-up-list
 	c-beginning-of-defun
@@ -19,7 +20,9 @@
 	c-end-of-defun
 	c-end-of-statement
 	c-indent-line-or-region
+	comment-dwim
 	counsel-yank-pop
+	dired-clean-directory
 	dired-flag-file-deletion
 	dired-undo
 	downcase-region
@@ -31,9 +34,12 @@
 	goto-line
 	indent-for-tab-command
 	indent-region
+	keyboard-escape-quit
 	kill-region
+	kill-sexp
 	mark-sexp
 	my/open-line-and-indent
+	nroff-electric-newline
 	open-line-and-indent
 	open-line-newline
 	org-beginning-of-line
@@ -46,6 +52,7 @@
 	org-return-and-maybe-indent
 	org-self-insert-command
 	org-yank
+	tab-to-tab-stop
 	undo-redo
 	up-list
 	upcase-region
