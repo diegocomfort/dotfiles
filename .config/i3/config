@@ -127,6 +127,11 @@ mode "resize" {
        bindsym $up    resize shrink height 25 px or 5 ppt
        bindsym $right resize grow   width  25 px or 5 ppt
 
+       bindsym Shift+$left  resize shrink width  10 px or 2 ppt
+       bindsym Shift+$down  resize grow   height 10 px or 2 ppt
+       bindsym Shift+$up    resize shrink height 10 px or 2 ppt
+       bindsym Shift+$right resize grow   width  10 px or 2 ppt
+
 # back to normal: Enter or Escape or Win+r
        bindsym Return mode "default"
        bindsym Escape mode "default"
