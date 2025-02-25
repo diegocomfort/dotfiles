@@ -44,7 +44,7 @@ bindings = [
 	 # Search
 	 {key = "Backspace", mods = "Control", mode = "Search", action = "SearchDeleteWord"},
 	 {key = "Backspace", mods = "Control|Shift", mode = "Search", action = "SearchClear"},
-	 # Vi (made to be like Emacs)
+	 # Vi (made to be like Emacs, but vi(m) actions are weird, so I'm improvising)
 	 {key = "P", mods = "Control", mode = "Vi|~Search", action = "Up"}, # C-p
 	 {key = "N", mods = "Control", mode = "Vi|~Search", action = "Down"}, # C-n
 	 {key = "B", mods = "Control", mode = "Vi|~Search", action = "Left"}, # C-b
@@ -59,4 +59,12 @@ bindings = [
 	 {key = "Space", mods = "Control", mode = "Vi|~Search", action = "ToggleNormalSelection"}, # C-SPC
 	 {key = "Space", mods = "Alt", mode = "Vi|~Search", action = "ToggleBlockSelection"}, # M-SPC
 	 {key = "L", mods = "Control", mode = "Vi|~Search", action = "CenterAroundViCursor"}, # C-l
+	 {key = "G", mods = "Control", mode = "Vi|~Search", action = "ClearSelection"}, # C-g
+	 {key = "W", mods = "Alt", mode = "Vi|~Search", action = "Copy"}, # M-w
+	 {key = "W", mods = "Alt", mode = "Vi|~Search", action = "ClearSelection"},
+	 {key = "W", mods = "Control", mode = "Vi|~Search", action = "Copy"}, # C-w
+	 {key = "W", mods = "Control", mode = "Vi|~Search", action = "ClearSelection"},
+	 # Unbindings
+	 {key = "F6", mode = "~Vi", action = "None"},
+	 {key = "F6", mode = "Vi|Search", action = "None"},
 ]
