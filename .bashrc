@@ -296,11 +296,8 @@ ffstrip() {
 	ffmpeg -i $1 -map_metadata -1 -c:v copy -c:a copy -fflags +bitexact -flags:v +bitexact -flags:a +bitexact $2
 }
 
-# Seems to be breaking bash
-PS1='\[$(prompt.py "$?" $(tput cols))\]';
-
-# Created by `pipx` on 2024-02-26 01:33:26
-export PATH="$PATH:/home/diego/.local/bin";
+source /home/diego/.config/scripts/prompt.sh
+export PROMPT_COMMAND=custom_prompt
 
 # Added by me
 export PATH="$PATH:/home/diego/.config/scripts";
